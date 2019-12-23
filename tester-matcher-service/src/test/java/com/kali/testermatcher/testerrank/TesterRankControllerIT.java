@@ -11,10 +11,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-public class TesterRankControllerIT extends AbstractIT {
+class TesterRankControllerIT extends AbstractIT {
 
     @Test
-    public void shouldReturnTesterRanksPage() {
+    void shouldReturnTesterRanksPage() {
         List<TesterRankDto> testerRanks = given()
                 .accept(ContentType.JSON)
                 .queryParam("size", "3")
@@ -37,7 +37,7 @@ public class TesterRankControllerIT extends AbstractIT {
     }
 
     @Test
-    public void shouldReturnTesterRanksWithAppliedFilters() {
+    void shouldReturnTesterRanksWithAppliedFilters() {
         List<TesterRankDto> testerRanks = given()
                 .accept(ContentType.JSON)
                 .queryParam("deviceIds", "9", "10")
@@ -61,7 +61,7 @@ public class TesterRankControllerIT extends AbstractIT {
     }
 
     @Test
-    public void shouldReturnZeroBugsWhenTesterHasZeroForGivenDevice() {
+    void shouldReturnZeroBugsWhenTesterHasZeroForGivenDevice() {
         List<TesterRankDto> testerRanks = given()
                 .accept(ContentType.JSON)
                 .queryParam("countryCodes", "US")

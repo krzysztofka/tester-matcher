@@ -8,10 +8,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-public class CountryControllerIT extends AbstractIT {
+class CountryControllerIT extends AbstractIT {
 
     @Test
-    public void shouldReturnAllSortedCountryCodes() {
+    void shouldReturnAllSortedCountryCodes() {
         List<String> countryCodes = when()
                 .get("/countries")
                 .then()

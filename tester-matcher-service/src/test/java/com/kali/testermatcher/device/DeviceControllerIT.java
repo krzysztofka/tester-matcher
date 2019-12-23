@@ -10,10 +10,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-public class DeviceControllerIT extends AbstractIT {
+class DeviceControllerIT extends AbstractIT {
 
     @Test
-    public void shouldReturnAllDevices() {
+    void shouldReturnAllDevices() {
         List<DeviceDto> devices = given()
                 .accept(ContentType.JSON)
                 .when()
