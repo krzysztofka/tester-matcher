@@ -1,0 +1,25 @@
+<app-tester-rank-search
+  (searchCriteriaChanged)="onSearchCriteriaChanged($event)"
+></app-tester-rank-search>
+
+<app-tester-rank-table
+  [dataSource]="page.content"
+  [rankStartFrom]="page.size * page.pageable.pageNumber"
+></app-tester-rank-table>
+
+<mat-card
+  *ngIf="loading$ | async"
+  style="display: flex; justify-content: center; align-items: center"
+>
+  <mat-spinner></mat-spinner>
+</mat-card>
+
+<mat-paginator
+  class="mat-elevation-z2"
+  [pageIndex]="page.pageable.pageNumber"
+  [length]="page.totalElements"
+  [pageSize]="page.size"
+  [pageSizeOptions]="[5, 10, 20, 100]"
+  (page)="onPageChanged($event)"
+>
+</mat-paginator>

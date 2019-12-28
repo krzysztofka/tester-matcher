@@ -1,0 +1,18 @@
+<mat-form-field>
+  <mat-label>{{ label }}</mat-label>
+  <mat-select
+    [formControl]="control"
+    multiple
+    (selectionChange)="onSeletionChange($event.value)"
+  >
+    <mat-option
+      class="thick"
+      [value]="allOptionValue"
+      [disabled]="allOptionDisabled"
+      >ALL</mat-option
+    >
+    <mat-option *ngFor="let option of options" [value]="valueFn(option)">
+      {{ labelFn(option) }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

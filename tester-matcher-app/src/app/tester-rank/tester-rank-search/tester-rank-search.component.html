@@ -1,0 +1,17 @@
+<multi-select-all
+  [control]="deviceControl"
+  [options]="devices"
+  [valueFn]="deviceValueFn"
+  [labelFn]="deviceLabelFn"
+  (selectionChange)="onSearchCriteriaChange()"
+  label="Device"
+>
+</multi-select-all>
+
+<multi-select-all
+  [control]="countryControl"
+  [options]="countries"
+  (selectionChange)="onSearchCriteriaChange()"
+  label="Country"
+>
+</multi-select-all>

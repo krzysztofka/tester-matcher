@@ -9,9 +9,14 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 11
 targetCompatibility = 11
 
-def queryDslVersion = '4.2.2'
-def h2Version = '1.4.199'
-def liquibaseVersion = '3.8.2'
+ext {
+    queryDslVersion = '4.2.2'
+    h2Version = '1.4.199'
+    liquibaseVersion = '3.8.2'
+    restAssuredVersion = '4.1.2'
+    commonsCollectionsVersion = '3.2.2'
+    assertjVersion = '3.11.1'
+}
 
 configurations {
     compileOnly {
@@ -33,11 +38,11 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     compile "com.querydsl:querydsl-core:${queryDslVersion}"
     compile "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    compile 'commons-collections:commons-collections:3.2.2'
-    testCompile 'io.rest-assured:rest-assured:4.1.2'
-    testCompile 'io.rest-assured:json-path:4.1.2'
-    testCompile 'io.rest-assured:xml-path:4.1.2'
-    testCompile 'org.assertj:assertj-core:3.11.1'
+    compile "commons-collections:commons-collections:${commonsCollectionsVersion}"
+    testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
+    testCompile "io.rest-assured:json-path:${restAssuredVersion}"
+    testCompile "io.rest-assured:xml-path:${restAssuredVersion}"
+    testCompile "org.assertj:assertj-core:${assertjVersion}"
 
     annotationProcessor(
             'org.projectlombok:lombok',
