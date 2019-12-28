@@ -7,10 +7,10 @@ import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { TesterRank } from "./model/tester-rank";
 import { PageEvent } from "@angular/material";
 import { BehaviorSubject, Subject } from "rxjs";
-import { debounceTime, finalize } from "rxjs/operators";
+import { throttleTime, finalize } from "rxjs/operators";
 
 @Component({
-  selector: "app-tester-rank",
+  selector: "tester-rank",
   templateUrl: "./tester-rank.component.html",
   styleUrls: ["./tester-rank.component.css"],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,7 +21,7 @@ export class TesterRankComponent implements OnInit {
   private searchCriteria = new TesterRankSearchCriteria();
   private loadingData = new BehaviorSubject<boolean>(false);
 
-  private testerRankDebouncer: Subject<
+  private testerRankThrottler: Subject<
     [Pageable, TesterRankSearchCriteria]
   > = new Subject<[Pageable, TesterRankSearchCriteria]>();
 
@@ -30,10 +30,10 @@ export class TesterRankComponent implements OnInit {
   constructor(private testerRankService: TesterRankService) {}
 
   ngOnInit() {
-    this.loagPage(this.pageable, this.searchCriteria);
-    this.testerRankDebouncer
-      .pipe(debounceTime(environment.testerRankDebounceTime))
-      .subscribe(value => this.loagPage(value[0], value[1]));
+    this.getTesterRanks(this.pageable, this.searchCriteria);
+    this.testerRankThrottler
+      .pipe(throttleTime(environment.testerRankThrottleTime))
+      .subscribe(value => this.getTesterRanks(value[0], value[1]));
   }
 
   get page(): Page<TesterRank> {
@@ -42,15 +42,19 @@ export class TesterRankComponent implements OnInit {
 
   onPageChanged(event: PageEvent) {
     this.pageable = new Pageable(event.pageSize, event.pageIndex);
-    this.testerRankDebouncer.next([this.pageable, this.searchCriteria]);
+    this.reloadTesterRanks();
   }
 
   onSearchCriteriaChanged(searchCriteria: TesterRankSearchCriteria) {
     this.searchCriteria = searchCriteria;
-    this.testerRankDebouncer.next([this.pageable, this.searchCriteria]);
+    this.reloadTesterRanks();
   }
 
-  private loagPage(pagable: Pageable, searchCriteria: SearchCriteria) {
+  private reloadTesterRanks() {
+    this.testerRankThrottler.next([this.pageable, this.searchCriteria]);
+  }
+
+  private getTesterRanks(pagable: Pageable, searchCriteria: SearchCriteria) {
     this.loadingData.next(true);
     this._page = { ...this._page, content: [] };
     this.testerRankService

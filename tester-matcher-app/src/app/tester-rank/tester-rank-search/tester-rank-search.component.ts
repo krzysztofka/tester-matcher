@@ -12,7 +12,7 @@ import { FormControl } from "@angular/forms";
 import { Device } from "./../../device/device";
 
 @Component({
-  selector: "app-tester-rank-search",
+  selector: "tester-rank-search",
   templateUrl: "./tester-rank-search.component.html",
   styleUrls: ["./tester-rank-search.component.css"],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,11 +1,11 @@
-<app-tester-rank-search
+<tester-rank-search
   (searchCriteriaChanged)="onSearchCriteriaChanged($event)"
-></app-tester-rank-search>
+></tester-rank-search>
 
-<app-tester-rank-table
+<tester-rank-table
   [dataSource]="page.content"
   [rankStartFrom]="page.size * page.pageable.pageNumber"
-></app-tester-rank-table>
+></tester-rank-table>
 
 <mat-card
   *ngIf="loading$ | async"
