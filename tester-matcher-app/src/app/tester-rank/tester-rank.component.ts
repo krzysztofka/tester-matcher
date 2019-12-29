@@ -1,12 +1,11 @@
 import { environment } from "./../../environments/environment";
 import { TesterRankSearchCriteria } from "./model/tester-rank-search-criteria";
-import { SearchCriteria } from "./../common/search-criteria";
 import { Page, Pageable } from "./../common/page";
 import { TesterRankService } from "./tester-rank.service";
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { TesterRank } from "./model/tester-rank";
 import { PageEvent } from "@angular/material";
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject, Subject, Subscription } from "rxjs";
 import { throttleTime, finalize } from "rxjs/operators";
 
 @Component({
@@ -16,10 +15,11 @@ import { throttleTime, finalize } from "rxjs/operators";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TesterRankComponent implements OnInit {
-  private _page: Page<TesterRank> = new Page();
+  page: Page<TesterRank> = new Page();
   private pageable: Pageable = new Pageable();
   private searchCriteria = new TesterRankSearchCriteria();
   private loadingData = new BehaviorSubject<boolean>(false);
+  private testerRanksSubscription: Subscription;
 
   private testerRankThrottler: Subject<
     [Pageable, TesterRankSearchCriteria]
@@ -36,10 +36,6 @@ export class TesterRankComponent implements OnInit {
       .subscribe(value => this.getTesterRanks(value[0], value[1]));
   }
 
-  get page(): Page<TesterRank> {
-    return this._page;
-  }
-
   onPageChanged(event: PageEvent) {
     this.pageable = new Pageable(event.pageSize, event.pageIndex);
     this.reloadTesterRanks();
@@ -54,12 +50,18 @@ export class TesterRankComponent implements OnInit {
     this.testerRankThrottler.next([this.pageable, this.searchCriteria]);
   }
 
-  private getTesterRanks(pagable: Pageable, searchCriteria: SearchCriteria) {
+  private getTesterRanks(
+    pagable: Pageable,
+    searchCriteria: TesterRankSearchCriteria
+  ) {
+    if (this.testerRanksSubscription) {
+      this.testerRanksSubscription.unsubscribe();
+    }
     this.loadingData.next(true);
-    this._page = { ...this._page, content: [] };
-    this.testerRankService
+    this.page = { ...this.page, content: [] };
+    this.testerRanksSubscription = this.testerRankService
       .getPage(pagable, searchCriteria)
       .pipe(finalize(() => this.loadingData.next(false)))
-      .subscribe(p => (this._page = p));
+      .subscribe(p => (this.page = p));
   }
 }

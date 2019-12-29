@@ -1,3 +1,3 @@
 export interface SearchCriteria {
-  toParamsMap(): Map<string, string[]>;
+  forEach(fn: (paramName: string, paramValue: string[]) => void);
 }

@@ -40,13 +40,11 @@ export class DataService<T> {
     searchCriteria: SearchCriteria
   ): HttpParams {
     let queryParams = params;
-    searchCriteria
-      .toParamsMap()
-      .forEach((values: string[], property: string) => {
-        values.forEach(v => {
-          queryParams = queryParams.append(property, v);
-        });
+    searchCriteria.forEach((property: string, values: string[]) => {
+      values.forEach(v => {
+        queryParams = queryParams.append(property, v);
       });
+    });
 
     return queryParams;
   }

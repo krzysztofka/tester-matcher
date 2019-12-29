@@ -5,7 +5,7 @@ import { ErrorHandler, Injectable } from "@angular/core";
 export class AppErrorHandler implements ErrorHandler {
   constructor(private snackBar: MatSnackBar) {}
 
-  handleError(error) {
+  handleError(error: any) {
     this.snackBar.open("An unexpected error occured.", "Dismiss");
   }
 }

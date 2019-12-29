@@ -6,11 +6,9 @@ export class TesterRankSearchCriteria implements SearchCriteria {
     public deviceIds: string[] = []
   ) {}
 
-  toParamsMap(): Map<string, string[]> {
-    const result = new Map<string, string[]>();
+  forEach(fn: (paramName: string, paramValue: string[]) => void) {
     Object.keys(this)
       .filter(key => this[key])
-      .forEach(key => result.set(key, this[key]));
-    return result;
+      .forEach(key => fn(key, this[key]));
   }
 }

@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  testerRankThrottleTime: 300,
+  testerRankThrottleTime: 0,
   urlAddress: "http://localhost:8080"
 };
 

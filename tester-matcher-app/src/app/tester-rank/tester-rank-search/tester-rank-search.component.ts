@@ -24,7 +24,6 @@ export class TesterRankSearchComponent implements OnInit {
 
   deviceControl = new FormControl("");
   countryControl = new FormControl("");
-
   devices: Device[] = [];
   countries: string[] = [];
 
