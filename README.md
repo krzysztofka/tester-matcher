@@ -43,12 +43,12 @@ http://localhost:8080/tester-ranks/page
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.21.
 # Requirements
 
-- [npm](https://www.npmjs.com/)
-- [angular cli](https://cli.angular.io/)
+- [npm](https://www.npmjs.com/) for dependency management
+- [angular cli](https://cli.angular.io/) to build and serve
 ```
 npm install -g @angular/cli
 ```
-- [Tester Matcher Service](#tester-matcher-service)
+- [Tester Matcher Service](#tester-matcher-service) as backend service
 
 # How to run it?
 From tester matcher app root directory:
