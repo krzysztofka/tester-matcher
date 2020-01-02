@@ -1,11 +1,11 @@
 Tester Matcher
 ==========================
-### This project consist of a backend and frontend application.
-- **Tester Matcher Service**
-- **Tester Matcher App**
+### This project consist of a backend and frontend module.
+- **[Tester Matcher Service](#tester-matcher-service)**
+- **[Tester Matcher App](#tester-matcher-app)**
 
-Tester Matcher Service
-==========================
+### Tester Matcher Service
+
 # What is it?
 [Spring Boot](https://spring.io/projects/spring-boot) Service with [H2 DB](https://www.h2database.com/html/main.html) populated by [Liquibase](https://www.liquibase.org/) from CSV files.
 Serves as a tester ranker which based on search criteria returns a list of testers with bugs count.
@@ -36,11 +36,19 @@ After the server is running, go to
 http://localhost:8080/tester-ranks/page
 ```
 
-Tester Matcher App
-==========================
+### Tester Matcher App
+
 # What is it?
 [Angular](https://angular.io/) App which presents testers rank paginated table with search criteria form.
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.21.
+# Requirements
+
+- [npm](https://www.npmjs.com/) for dependency management
+- [angular cli](https://cli.angular.io/) to build and serve
+```
+npm install -g @angular/cli
+```
+- [Tester Matcher Service](#tester-matcher-service) as backend service
 
 # How to run it?
 From tester matcher app root directory:
