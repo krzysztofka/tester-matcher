@@ -2,24 +2,29 @@ import { environment } from "./../../environments/environment";
 import { TesterRankSearchCriteria } from "./model/tester-rank-search-criteria";
 import { Page, Pageable } from "./../common/page";
 import { TesterRankService } from "./tester-rank.service";
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnDestroy
+} from "@angular/core";
 import { TesterRank } from "./model/tester-rank";
 import { PageEvent } from "@angular/material";
-import { BehaviorSubject, Subject, Subscription } from "rxjs";
-import { throttleTime, finalize } from "rxjs/operators";
+import { BehaviorSubject, Subject, Observable } from "rxjs";
+import { debounceTime, finalize, switchMap, tap } from "rxjs/operators";
 
 @Component({
   selector: "tester-rank",
   templateUrl: "./tester-rank.component.html",
   styleUrls: ["./tester-rank.component.css"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class TesterRankComponent implements OnInit {
+export class TesterRankComponent implements OnInit, OnDestroy {
   page: Page<TesterRank> = new Page();
   private pageable: Pageable = new Pageable();
   private searchCriteria = new TesterRankSearchCriteria();
   private loadingData = new BehaviorSubject<boolean>(false);
-  private testerRanksSubscription: Subscription;
 
   private testerRankThrottler: Subject<
     [Pageable, TesterRankSearchCriteria]
@@ -27,13 +32,31 @@ export class TesterRankComponent implements OnInit {
 
   public loading$ = this.loadingData.asObservable();
 
-  constructor(private testerRankService: TesterRankService) {}
+  constructor(
+    private testerRankService: TesterRankService,
+    private changeDetector: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.getTesterRanks(this.pageable, this.searchCriteria);
     this.testerRankThrottler
-      .pipe(throttleTime(environment.testerRankThrottleTime))
-      .subscribe(value => this.getTesterRanks(value[0], value[1]));
+      .pipe(
+        tap(v => this.loadingData.next(true)),
+        tap(v => (this.page = { ...this.page, content: [] })),
+        debounceTime(environment.testerRankThrottleTime),
+        switchMap(value => this.getTesterRanks(value[0], value[1]))
+      )
+      .subscribe(p => {
+        this.page = p;
+        this.changeDetector.markForCheck();
+      });
+
+    this.getTesterRanks(this.pageable, this.searchCriteria).subscribe(
+      p => (this.page = p)
+    );
+  }
+
+  ngOnDestroy() {
+    this.testerRankThrottler.unsubscribe();
   }
 
   onPageChanged(event: PageEvent) {
@@ -53,15 +76,9 @@ export class TesterRankComponent implements OnInit {
   private getTesterRanks(
     pagable: Pageable,
     searchCriteria: TesterRankSearchCriteria
-  ) {
-    if (this.testerRanksSubscription) {
-      this.testerRanksSubscription.unsubscribe();
-    }
-    this.loadingData.next(true);
-    this.page = { ...this.page, content: [] };
-    this.testerRanksSubscription = this.testerRankService
+  ): Observable<Page<TesterRank>> {
+    return this.testerRankService
       .getPage(pagable, searchCriteria)
-      .pipe(finalize(() => this.loadingData.next(false)))
-      .subscribe(p => (this.page = p));
+      .pipe(finalize(() => this.loadingData.next(false)));
   }
 }
